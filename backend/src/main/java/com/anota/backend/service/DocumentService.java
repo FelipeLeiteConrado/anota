@@ -57,4 +57,15 @@ public class DocumentService {
 
         return response;
     }
+
+    public DocumentResponse updateContent(String slug, String content) {
+        Document document = repository.findBySlug(slug)
+                .orElseThrow(() -> new RuntimeException("Document not found"));
+
+        document.setContent(content);
+        document.setUpdatedAt(LocalDateTime.now());
+
+        Document saved = repository.save(document);
+        return toResponse(saved);
+    }
 }

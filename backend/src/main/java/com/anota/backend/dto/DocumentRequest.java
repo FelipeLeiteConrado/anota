@@ -5,6 +5,7 @@ public class DocumentRequest {
     private String slug;
     private String readPassword;
     private String writePassword;
+    private String content;
 
     public String getSlug() {
         return slug;
@@ -28,5 +29,12 @@ public class DocumentRequest {
 
     public void setWritePassword(String writePassword) {
         this.writePassword = writePassword;
+    }
+
+    public String getContent() {
+        return content;
+    }
+    public void setContent(String content) {
+        this.content = content;
     }
 }

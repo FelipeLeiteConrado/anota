@@ -30,4 +30,12 @@ public class DocumentController {
         DocumentResponse documentResponse = service.create(request);
         return ResponseEntity.status(201).body(documentResponse);
     }
+
+    @PatchMapping("/{slug}")
+    public ResponseEntity<DocumentResponse> updateContent(
+            @PathVariable String slug,
+            @RequestBody DocumentRequest request) {
+        DocumentResponse response = service.updateContent(slug, request.getContent());
+        return ResponseEntity.ok(response);
+    }
 }
