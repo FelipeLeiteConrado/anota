@@ -1,5 +1,7 @@
 package com.anota.backend.service;
 
+import com.anota.backend.dto.AuthRequest;
+import com.anota.backend.dto.AuthResponse;
 import com.anota.backend.dto.DocumentRequest;
 import com.anota.backend.dto.DocumentResponse;
 import com.anota.backend.repository.DocumentRepository;
@@ -12,10 +14,12 @@ import java.util.Optional;
 @Service
 public class DocumentService {
 
-    private DocumentRepository repository;
+    private final DocumentRepository repository;
+    private final AuthService authService;
 
-    public DocumentService(DocumentRepository repository) {
+    public DocumentService(DocumentRepository repository, AuthService authService) {
         this.repository = repository;
+        this.authService = authService;
     }
 
     public Optional<Document> findBySlug(String slug) {
@@ -31,11 +35,11 @@ public class DocumentService {
         document.setUpdatedAt(LocalDateTime.now());
 
         if (request.getReadPassword() != null) {
-            document.setReadPasswordHash(request.getReadPassword());
+            document.setReadPasswordHash(authService.hashPassword(request.getReadPassword()));
         }
 
         if (request.getWritePassword() != null) {
-            document.setWritePasswordHash(request.getWritePassword());
+            document.setWritePasswordHash(authService.hashPassword(request.getWritePassword()));
         }
 
         Document saved =  repository.save(document);
@@ -67,5 +71,22 @@ public class DocumentService {
 
         Document saved = repository.save(document);
         return toResponse(saved);
+    }
+
+    public AuthResponse authenticate(String slug, AuthRequest request) {
+        Document document = repository.findBySlug(slug)
+                .orElseThrow(() -> new RuntimeException("Document not found"));
+
+        if (request.getType().equals("read")) {
+            boolean ok = authService.verifyPassword(request.getPassword(), document.getReadPasswordHash());
+            if (!ok) throw new RuntimeException("Senha incorreta");
+            String token = authService.generateToken(slug, "read");
+            return new AuthResponse(token, "read");
+        } else {
+            boolean ok = authService.verifyPassword(request.getPassword(), document.getWritePasswordHash());
+            if (!ok) throw new RuntimeException("Senha incorreta");
+            String token = authService.generateToken(slug, "read_write");
+            return new AuthResponse(token, "read_write");
+        }
     }
 }
