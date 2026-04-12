@@ -1,0 +1,101 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f5f0e8;
+  --bg-dark: #1a1714;
+  --text: #2c2416;
+  --text-dark: #e8e0d0;
+  --muted: #8c7a5e;
+  --muted-dark: #6b5e4a;
+  --border: #d4c4a8;
+  --border-dark: #3a3028;
+  --accent: #6b4c2a;
+  --accent-dark: #c4956a;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 18px;
+  line-height: 1.8;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+  }
+}
+
+textarea {
+  background-color: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: 0.02em;
+}
+
+input, button {
+  font-family: inherit;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  height: 100%;
+  background-color: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  #root {
+    background-color: var(--bg-dark);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d4c4a8 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 0px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #d4c4a8;
+  border-radius: 3px;
+}
+
+textarea {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

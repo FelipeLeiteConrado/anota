@@ -25,41 +25,77 @@ export default function HomePage() {
             alignItems: 'center',
             justifyContent: 'center',
             height: '100vh',
-            gap: '16px'
+            gap: '24px',
+            padding: '40px'
         }}>
-            <h1 style={{ fontSize: '32px', fontWeight: 500 }}>anota</h1>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ textAlign: 'center' }}>
+                <h1 style={{
+                    fontSize: '48px',
+                    fontWeight: 'normal',
+                    letterSpacing: '0.08em',
+                    color: '#6b4c2a',
+                    marginBottom: '8px'
+                }}>
+                    anota
+                </h1>
+                <p style={{
+                    fontSize: '14px',
+                    letterSpacing: '0.12em',
+                    color: '#8c7a5e',
+                    textTransform: 'uppercase'
+                }}>
+                    escreva. compartilhe. simples assim.
+                </p>
+            </div>
+
+            <div style={{
+                display: 'flex',
+                gap: '0',
+                border: '1px solid #d4c4a8',
+                borderRadius: '4px',
+                overflow: 'hidden',
+                width: '100%',
+                maxWidth: '420px'
+            }}>
                 <input
                     value={slug}
                     onChange={e => setSlug(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleGo()}
                     placeholder="nome do documento..."
                     style={{
-                        padding: '10px 16px',
+                        flex: 1,
+                        padding: '12px 16px',
                         fontSize: '16px',
-                        border: '1px solid #ddd',
-                        borderRadius: '8px',
+                        border: 'none',
                         outline: 'none',
-                        width: '280px'
+                        background: 'transparent',
+                        color: 'inherit',
+                        letterSpacing: '0.02em'
                     }}
                 />
                 <button
                     onClick={handleGo}
                     style={{
-                        padding: '10px 20px',
-                        fontSize: '16px',
-                        background: '#000',
-                        color: '#fff',
+                        padding: '12px 24px',
+                        fontSize: '14px',
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        background: '#6b4c2a',
+                        color: '#f5f0e8',
                         border: 'none',
-                        borderRadius: '8px',
                         cursor: 'pointer'
                     }}
                 >
                     ir
                 </button>
             </div>
-            <p style={{ color: '#888', fontSize: '14px' }}>
-                deixe em branco pra gerar um link aleatório
+
+            <p style={{
+                fontSize: '12px',
+                color: '#8c7a5e',
+                letterSpacing: '0.06em'
+            }}>
+                deixe em branco para gerar um link aleatório
             </p>
         </div>
     );
