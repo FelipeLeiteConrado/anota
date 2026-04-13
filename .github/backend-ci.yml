@@ -1,0 +1,33 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Compilar e testar
+        working-directory: backend
+        run: mvn clean package -DskipTests
+
+      - name: Build concluído
+        run: echo "Backend compilou com sucesso"
