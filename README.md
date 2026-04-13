@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="./frontend/public/anota.svg" width="300" alt="anota logo">
+<img src="./frontend/public/anota.svg" width="300" alt="anota logo">
 
 ![versão](https://img.shields.io/badge/versão-1.0.0-c4956a?style=flat-square)
 ![status](https://img.shields.io/badge/status-online-brightgreen?style=flat-square)
