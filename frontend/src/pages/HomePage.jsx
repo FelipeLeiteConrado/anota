@@ -7,15 +7,22 @@ export default function HomePage() {
     const navigate = useNavigate();
 
     async function handleGo() {
-        const target = slug.trim() || Math.random().toString(36).slice(2, 8);
-        
+        const target = slug.trim();
+
         try {
-            await api.get(`/api/doc/${target}`);
-        } catch {
-            await api.post('/api/doc', { slug: target });
+            if (target) {
+                await api.get(`/api/doc/${target}`);
+                navigate(`/${target}`);
+            } else {
+                const res = await api.post('/api/doc', { slug: '' });
+                navigate(`/${res.data.slug}`);
+            }
+        } catch (err) {
+            if (err.response?.status === 404) {
+                const res = await api.post('/api/doc', { slug: target });
+                navigate(`/${res.data.slug}`);
+            }
         }
-        
-        navigate(`/${target}`);
     }
 
     return (
