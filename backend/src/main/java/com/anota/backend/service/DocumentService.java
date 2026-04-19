@@ -16,10 +16,12 @@ public class DocumentService {
 
     private final DocumentRepository repository;
     private final AuthService authService;
+    private final SlugService slugService;
 
-    public DocumentService(DocumentRepository repository, AuthService authService) {
+    public DocumentService(DocumentRepository repository, AuthService authService, SlugService slugService) {
         this.repository = repository;
         this.authService = authService;
+        this.slugService = slugService;
     }
 
     public Optional<Document> findBySlug(String slug) {
@@ -29,7 +31,10 @@ public class DocumentService {
     public DocumentResponse create(DocumentRequest request) {
         Document document = new Document();
 
-        document.setSlug(request.getSlug());
+        String slug = (request.getSlug() != null && !request.getSlug().isBlank())
+                ? request.getSlug()
+                : slugService.generate();
+        document.setSlug(slug);
         document.setContent("");
         document.setCreatedAt(LocalDateTime.now());
         document.setUpdatedAt(LocalDateTime.now());
