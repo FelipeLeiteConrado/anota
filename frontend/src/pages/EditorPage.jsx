@@ -69,67 +69,67 @@ export default function EditorPage() {
 
     return (
         <>
-        <Sidebar
-            slug={slug}
-            isOpen={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-        />
+            <Sidebar
+                slug={slug}
+                isOpen={sidebarOpen}
+                onClose={() => setSidebarOpen(false)}
+            />
 
-        <button
-            onClick={() => setSidebarOpen(true)}
-            style={{
-                position: 'fixed',
-                top: '20px',
-                left: '20px',
-                zIndex: 5,
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '5px',
-                opacity: 0.4,
-                transition: 'opacity 0.2s'
-            }}
-            onMouseEnter={e => e.currentTarget.style.opacity = 1}
-            onMouseLeave={e => e.currentTarget.style.opacity = 0.4}
-        >
-            {[0,1,2].map(i => (
-                <span key={i} style={{
-                    display: 'block',
-                    width: '22px',
-                    height: '1.5px',
-                    background: '#6b4c2a'
-                }} />
-            ))}
-        </button>
-        
-        <textarea
-            value={document?.content || ''}
-            onChange={handleChange}
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                border: 'none',
-                outline: 'none',
-                resize: 'none',
-                padding: '60px 80px',
-                fontSize: '18px',
-                lineHeight: '1.8',
-                letterSpacing: '0.02em',
-                background: 'transparent',
-                color: 'inherit',
-                fontFamily: 'Georgia, Times New Roman, serif',
-                overflowX: 'hidden',
-                overflowY: 'auto',
-                boxSizing: 'border-box'
-            }}
-            placeholder="comece a escrever..."
-        />
+            <button
+                onClick={() => setSidebarOpen(true)}
+                style={{
+                    position: 'fixed',
+                    top: '20px',
+                    left: '20px',
+                    zIndex: 5,
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '5px',
+                    opacity: 0.4,
+                    transition: 'opacity 0.2s'
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = 1}
+                onMouseLeave={e => e.currentTarget.style.opacity = 0.4}
+            >
+                {[0, 1, 2].map(i => (
+                    <span key={i} style={{
+                        display: 'block',
+                        width: '22px',
+                        height: '1.5px',
+                        background: '#6b4c2a'
+                    }} />
+                ))}
+            </button>
+
+            <textarea
+                value={document?.content || ''}
+                onChange={handleChange}
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    border: 'none',
+                    outline: 'none',
+                    resize: 'none',
+                    padding: '60px 80px',
+                    fontSize: '18px',
+                    lineHeight: '1.8',
+                    letterSpacing: '0.02em',
+                    background: 'transparent',
+                    color: 'inherit',
+                    fontFamily: 'Georgia, Times New Roman, serif',
+                    overflowX: 'hidden',
+                    overflowY: 'auto',
+                    boxSizing: 'border-box'
+                }}
+                placeholder="comece a escrever..."
+            />
         </>
     );
 }
