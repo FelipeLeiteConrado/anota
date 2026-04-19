@@ -1,15 +1,17 @@
 import { useParams } from 'react-router-dom';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useDocument } from '../hooks/useDocument';
 import { useWebSocket } from '../hooks/useWebSocket';
+import { useAuth } from '../hooks/useAuth';
 import wsClient from '../services/wsClient';
 import api from '../services/api';
-import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
+import PasswordModal from '../components/PasswordModal';
 
 export default function EditorPage() {
     const { slug } = useParams();
     const { document, setDocument, loading, notFound } = useDocument(slug);
+    const { needsReadAuth, needsWriteAuth, canEdit, authenticate, error, loading: authLoading } = useAuth(slug, document);
     const isRemoteUpdate = useRef(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -67,69 +69,89 @@ export default function EditorPage() {
         </div>
     );
 
+    if (needsReadAuth) return (
+        <PasswordModal
+            type="read"
+            onSubmit={authenticate}
+            error={error}
+            loading={authLoading}
+        />
+    );
+
     return (
         <>
-        <Sidebar
-            slug={slug}
-            isOpen={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-        />
+            {needsWriteAuth && (
+                <PasswordModal
+                    type="write"
+                    onSubmit={authenticate}
+                    error={error}
+                    loading={authLoading}
+                />
+            )}
 
-        <button
-            onClick={() => setSidebarOpen(true)}
-            style={{
-                position: 'fixed',
-                top: '20px',
-                left: '20px',
-                zIndex: 5,
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '5px',
-                opacity: 0.4,
-                transition: 'opacity 0.2s'
-            }}
-            onMouseEnter={e => e.currentTarget.style.opacity = 1}
-            onMouseLeave={e => e.currentTarget.style.opacity = 0.4}
-        >
-            {[0,1,2].map(i => (
-                <span key={i} style={{
-                    display: 'block',
-                    width: '22px',
-                    height: '1.5px',
-                    background: '#6b4c2a'
-                }} />
-            ))}
-        </button>
-        
-        <textarea
-            value={document?.content || ''}
-            onChange={handleChange}
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                border: 'none',
-                outline: 'none',
-                resize: 'none',
-                padding: '60px 80px',
-                fontSize: '18px',
-                lineHeight: '1.8',
-                letterSpacing: '0.02em',
-                background: 'transparent',
-                color: 'inherit',
-                fontFamily: 'Georgia, Times New Roman, serif',
-                overflowX: 'hidden',
-                overflowY: 'auto',
-                boxSizing: 'border-box'
-            }}
-            placeholder="comece a escrever..."
-        />
+            <Sidebar
+                slug={slug}
+                isOpen={sidebarOpen}
+                onClose={() => setSidebarOpen(false)}
+            />
+
+            <button
+                onClick={() => setSidebarOpen(true)}
+                style={{
+                    position: 'fixed',
+                    top: '20px',
+                    left: '20px',
+                    zIndex: 5,
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '5px',
+                    opacity: 0.4,
+                    transition: 'opacity 0.2s'
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = 1}
+                onMouseLeave={e => e.currentTarget.style.opacity = 0.4}
+            >
+                {[0, 1, 2].map(i => (
+                    <span key={i} style={{
+                        display: 'block',
+                        width: '22px',
+                        height: '1.5px',
+                        background: '#6b4c2a'
+                    }} />
+                ))}
+            </button>
+
+            <textarea
+                value={document?.content || ''}
+                onChange={handleChange}
+                readOnly={!canEdit}
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    border: 'none',
+                    outline: 'none',
+                    resize: 'none',
+                    padding: '60px 80px',
+                    fontSize: '18px',
+                    lineHeight: '1.8',
+                    letterSpacing: '0.02em',
+                    background: 'transparent',
+                    color: 'inherit',
+                    fontFamily: 'Georgia, Times New Roman, serif',
+                    overflowX: 'hidden',
+                    overflowY: 'auto',
+                    boxSizing: 'border-box',
+                    cursor: canEdit ? 'text' : 'default'
+                }}
+                placeholder={canEdit ? 'comece a escrever...' : 'somente leitura'}
+            />
         </>
     );
 }
