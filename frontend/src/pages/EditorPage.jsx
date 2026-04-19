@@ -1,15 +1,17 @@
 import { useParams } from 'react-router-dom';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useDocument } from '../hooks/useDocument';
 import { useWebSocket } from '../hooks/useWebSocket';
+import { useAuth } from '../hooks/useAuth';
 import wsClient from '../services/wsClient';
 import api from '../services/api';
-import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
+import PasswordModal from '../components/PasswordModal';
 
 export default function EditorPage() {
     const { slug } = useParams();
     const { document, setDocument, loading, notFound } = useDocument(slug);
+    const { needsReadAuth, needsWriteAuth, canEdit, authenticate, error, loading: authLoading } = useAuth(slug, document);
     const isRemoteUpdate = useRef(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -67,8 +69,26 @@ export default function EditorPage() {
         </div>
     );
 
+    if (needsReadAuth) return (
+        <PasswordModal
+            type="read"
+            onSubmit={authenticate}
+            error={error}
+            loading={authLoading}
+        />
+    );
+
     return (
         <>
+            {needsWriteAuth && (
+                <PasswordModal
+                    type="write"
+                    onSubmit={authenticate}
+                    error={error}
+                    loading={authLoading}
+                />
+            )}
+
             <Sidebar
                 slug={slug}
                 isOpen={sidebarOpen}
@@ -108,6 +128,7 @@ export default function EditorPage() {
             <textarea
                 value={document?.content || ''}
                 onChange={handleChange}
+                readOnly={!canEdit}
                 style={{
                     position: 'fixed',
                     top: 0,
@@ -126,9 +147,10 @@ export default function EditorPage() {
                     fontFamily: 'Georgia, Times New Roman, serif',
                     overflowX: 'hidden',
                     overflowY: 'auto',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    cursor: canEdit ? 'text' : 'default'
                 }}
-                placeholder="comece a escrever..."
+                placeholder={canEdit ? 'comece a escrever...' : 'somente leitura'}
             />
         </>
     );
